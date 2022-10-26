@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">weather_app</string>
+    <string name="app_name">Weather</string>
     <string name="search">Search</string>
     <string name="general">General</string>
+    <string name="city">Kazan</string>
+    <string name="degrees">2°</string>
+    <string name="description">Showers</string>
+    <string name="time">Now</string>
+    <string name="temp_interval">-1 : 4</string>
+    <string name="weekday">Today</string>
+    <string name="_7_day_forecast">7-DAY FORECAST</string>
 </resources>
