@@ -1,22 +1,29 @@
 package ru.valisheva.weather_app.presentation.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import ru.valisheva.weather_app.R
+import androidx.core.app.ActivityCompat
+import dagger.hilt.android.AndroidEntryPoint
 import ru.valisheva.weather_app.databinding.ActivityMainBinding
-import ru.valisheva.weather_app.presentation.extentions.findController
+import ru.valisheva.weather_app.presentation.ViewPagerAdapter
+import ru.valisheva.weather_app.presentation.fragments.MainFragment
+import ru.valisheva.weather_app.presentation.fragments.SearchFragment
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-    private lateinit var controller: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also{
             setContentView(it.root)
         }
-        controller = findController(R.id.container)
+        val adapter= ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(MainFragment(),"Main")
+        adapter.addFragment(SearchFragment(),"Search")
+        binding.viewPager.adapter=adapter
+        binding.tbLayout.setupWithViewPager(binding.viewPager)
     }
 }

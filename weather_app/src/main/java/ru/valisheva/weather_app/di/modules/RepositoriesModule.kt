@@ -4,7 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import ru.valisheva.weather_app.data.repositories.LocationRepositoryImpl
 import ru.valisheva.weather_app.data.repositories.WeatherRepositoryImpl
+import ru.valisheva.weather_app.domain.repositories.LocationRepository
 import ru.valisheva.weather_app.domain.repositories.WeatherRepository
 
 @Module
@@ -15,5 +17,10 @@ interface RepositoryModule {
     fun weatherRepository(
         impl: WeatherRepositoryImpl
     ): WeatherRepository
+
+    @Binds
+    fun locationRepository(
+        impl: LocationRepositoryImpl
+    ): LocationRepository
 
 }

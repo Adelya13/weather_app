@@ -10,17 +10,40 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.valisheva.weather_app.data.api.Api
+import ru.valisheva.weather_app.data.api.MeteoApi
+import ru.valisheva.weather_app.data.api.OpenWeatherApi
 import ru.valisheva.weather_app.di.qualifiers.ApiKeyInterceptor
 import ru.valisheva.weather_app.di.qualifiers.LoggingInterceptor
+import ru.valisheva.weather_app.di.qualifiers.OkhttpMeteoInterceptor
+import ru.valisheva.weather_app.di.qualifiers.OkhttpOpenWeatherInterceptor
 
 
-private const val BASE_URL = "https://api.open-meteo.com/v1/"
+private const val METEO_BASE_URL = "https://api.open-meteo.com/v1/"
+private const val OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/"
+
+private const val API_KEY = "fde244775c5ca4fee06868ab465e85e3"
+private const val QUERY_API_KEY = "appid"
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+
+    @Provides
+    @ApiKeyInterceptor
+    fun apiKeyInterceptor(): Interceptor = Interceptor { chain ->
+        val original = chain.request()
+        val newURL = original.url.newBuilder()
+            .addQueryParameter(QUERY_API_KEY, API_KEY)
+            .build()
+
+        chain.proceed(
+            original.newBuilder()
+                .url(newURL)
+                .build()
+        )
+    }
 
     @Provides
     @LoggingInterceptor
@@ -30,9 +53,9 @@ class NetworkModule {
                 HttpLoggingInterceptor.Level.BODY
             )
     }
-
     @Provides
-    fun okhttp(
+    @OkhttpOpenWeatherInterceptor
+    fun okhttpOpenWeather(
         @ApiKeyInterceptor apiKeyInterceptor: Interceptor,
         @LoggingInterceptor httpLoggingInterceptor: Interceptor,
 
@@ -49,18 +72,45 @@ class NetworkModule {
             .build()
 
     @Provides
+    @OkhttpMeteoInterceptor
+    fun okhttpMeteo(
+        @LoggingInterceptor httpLoggingInterceptor: Interceptor,
+        ): OkHttpClient =
+        OkHttpClient.Builder()
+            .also {
+                if (BuildConfig.DEBUG) {
+                    it.addInterceptor(
+                        httpLoggingInterceptor
+                    )
+                }
+            }
+            .build()
+
+    @Provides
     fun provideGsonConverter(): GsonConverterFactory = GsonConverterFactory.create()
 
     @Provides
-    fun api(
-        okHttpClient: OkHttpClient,
+    fun apiMeteo(
+        @OkhttpMeteoInterceptor okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
-    ): Api =
+    ): MeteoApi =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(METEO_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
-            .create(Api::class.java)
+            .create(MeteoApi::class.java)
+
+    @Provides
+    fun apiOpenWeather(
+        @OkhttpOpenWeatherInterceptor okHttpClient: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): OpenWeatherApi =
+        Retrofit.Builder()
+            .baseUrl(OPEN_WEATHER_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+            .create(OpenWeatherApi::class.java)
 
 }

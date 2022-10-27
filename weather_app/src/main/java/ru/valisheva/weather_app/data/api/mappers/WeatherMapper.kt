@@ -1,10 +1,10 @@
 package ru.valisheva.weather_app.data.api.mappers
 
-import android.annotation.SuppressLint
+import ru.valisheva.weather_app.data.responses.CurrentWeatherResponse
 import ru.valisheva.weather_app.data.responses.WeatherDailyResponse
-import ru.valisheva.weather_app.data.responses.WeatherHourlyResponse
-import ru.valisheva.weather_app.domain.models.DailyWeather
-import ru.valisheva.weather_app.domain.models.HourlyWeather
+import ru.valisheva.weather_app.data.responses.WeatherResponse
+import ru.valisheva.weather_app.data.responses.WeatherShortResponse
+import ru.valisheva.weather_app.domain.models.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -12,29 +12,58 @@ import kotlin.collections.ArrayList
 
 class WeatherMapper {
 
-    fun mapHourlyWeather(response: WeatherHourlyResponse) : HourlyWeather = HourlyWeather (
-        currTime = normalizeTime(response.currentWeather.time),
-        currTemp = response.currentWeather.temp,
-        time = normalizeTime(response.hourly.time),
-        temp = response.hourly.temp,
+    fun mapCurrentWeather(response: CurrentWeatherResponse) : CurrentWeather = CurrentWeather(
+        city = response.city,
+        descriptions = response.descriptions[0].description
     )
 
-    fun mapDailyWeather(response: WeatherDailyResponse) : DailyWeather = DailyWeather(
-        time = normalizeTime(response.daily.time),
-        tempMax = response.daily.tempMax,
-        tempMin = response.daily.tempMin,
+    fun mapHourlyWeather(response: WeatherResponse) : CurrWeather = CurrWeather (
+        currTime = response.currentWeather.time,
+        currTemp = response.currentWeather.temp.toInt(),
     )
 
-    @SuppressLint("SimpleDateFormat")
-    private fun normalizeTime(time: String): String {
-        val localTime = SimpleDateFormat("HH", Locale.getDefault())
-        return localTime.parse(time).toString()
+    fun mapDailyWeather(response: WeatherDailyResponse) : ArrayList<DailyWeather>{
+        return mapToDaily(
+            response.daily.time,
+            response.daily.tempMin,
+            response.daily.tempMax
+        )
+    }
+    fun mapCityCoordinates(response: WeatherShortResponse) : CityCoordinates = CityCoordinates(
+        latitude = response.coordinates.latitude,
+        longitude = response.coordinates.longitude
+    )
+
+    private fun mapToDaily(time: ArrayList<String>,
+                           minTemp: ArrayList<Double>,
+                           maxTemp: ArrayList<Double>
+    ) : ArrayList<DailyWeather>{
+        val result = arrayListOf<DailyWeather>()
+
+        var i = 0;
+        while (i< time.size) {
+            result.add(DailyWeather(
+                if(i == 0) "Today" else normalizeWeekday(time[i]),
+                minTemp[i].toInt(), maxTemp[i].toInt()))
+            i++
+        }
+        return result
     }
 
-    private fun normalizeTime(times: ArrayList<String>) : ArrayList<String>{
-        times.map { time->
-            normalizeTime(time)
-        }
-        return times
+    private fun normalizeWeekday(time: String): String {
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = simpleDateFormat.parse(time).day
+        return convertToDayOfWeek(date)
+    }
+
+    private fun convertToDayOfWeek(day: Int): String{
+        if (day == 0) return "Sunday"
+        if (day == 1) return "Monday"
+        if (day == 2) return "Tuesday"
+        if (day == 3) return "Wednesday"
+        if (day == 4) return "Thursday"
+        if (day == 5) return "Friday"
+        if (day == 6) return "Saturday"
+        return ""
     }
 }

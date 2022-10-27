@@ -6,7 +6,7 @@ data class Daily(
     @SerializedName("time")
     val time : ArrayList<String>,
     @SerializedName("temperature_2m_max")
-    val tempMax : ArrayList<String>,
+    val tempMax : ArrayList<Double>,
     @SerializedName("temperature_2m_min")
-    val tempMin : ArrayList<String>,
+    val tempMin : ArrayList<Double>,
 )
