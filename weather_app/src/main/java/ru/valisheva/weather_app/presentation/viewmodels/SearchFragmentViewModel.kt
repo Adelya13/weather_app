@@ -23,8 +23,9 @@ class SearchFragmentViewModel @Inject constructor(
     private val getCityCoordinates: GetCityCoordinates,
     private val getCurrentWeatherResponse: GetCurrentWeatherResponse,
 ) : ViewModel(){
-    private var _hourly: MutableLiveData<Result<CurrWeather>> = MutableLiveData()
-    val hourly: LiveData<Result<CurrWeather>> = _hourly
+
+    private var _currWeather: MutableLiveData<Result<CurrWeather>> = MutableLiveData()
+    val currWeather: LiveData<Result<CurrWeather>> = _currWeather
 
     private var _daily: MutableLiveData<Result<ArrayList<DailyWeather>>> = MutableLiveData()
     val daily: LiveData<Result<ArrayList<DailyWeather>>> = _daily
@@ -36,14 +37,23 @@ class SearchFragmentViewModel @Inject constructor(
     val coordinates: LiveData<Result<CityCoordinates>> = _coordinates
 
 
-
+    fun getCoordinatesByCityName(name: String){
+        viewModelScope.launch {
+            try {
+                val coordinates = getCityCoordinates(name)
+                _coordinates.value = Result.success(coordinates)
+            }catch (ex: Exception) {
+                _coordinates.value = Result.failure(ex)
+            }
+        }
+    }
     fun searchHourlyByCoordinates(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                val hourly = getHourlyWeatherByCoordinates(latitude,longitude)
-                _hourly.value = Result.success(hourly)
+                val currentWeather = getHourlyWeatherByCoordinates(latitude,longitude)
+                _currWeather.value = Result.success(currentWeather)
             }catch (ex: Exception) {
-                _hourly.value = Result.failure(ex)
+                _currWeather.value = Result.failure(ex)
             }
         }
     }

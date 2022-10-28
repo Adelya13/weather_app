@@ -18,6 +18,16 @@
         android:layout_height="wrap_content"
         android:background="@color/main"
         >
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
             android:id="@+id/tv_city"
             style="@style/BasicTextStyle"
@@ -25,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/city"
+            android:visibility="visible"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/degrees"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/tv_city"
             app:layout_constraintStart_toStartOf="@+id/tv_city"
             app:layout_constraintTop_toBottomOf="@+id/tv_city" />
@@ -46,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/description"
+            android:visibility="visible"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_temp"
             app:layout_constraintStart_toStartOf="@+id/tv_temp"
@@ -61,7 +74,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@color/shimmer"
+            android:textAlignment="center"
             android:text="@string/_7_day_forecast"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_description" />
@@ -75,6 +90,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:orientation="vertical"
+            android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -31,19 +31,17 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMainBinding.bind(view)
-        initAll()
-        getLocation()
-    }
-
-    private fun initAll(){
         initObservers()
         initDailyRV()
-
+        getLocation()
+        doBaseElementGone()
     }
+
     private fun initObservers(){
         viewModel.daily.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
                 initDailyAdapter(it)
+                doBaseElementVisible()
             },onFailure = {
                 Log.e("DAILY_EXCEPTION", it.message.toString())
             })
@@ -88,9 +86,10 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showLocalTemp(hourlyWeather: CurrWeather){
         with(binding){
-            tvTemp.text = hourlyWeather.currTemp.toString()
+            tvTemp.text = hourlyWeather.currTemp.toString() + "°"
         }
     }
     private fun showLocalInfo(currentWeather: CurrentWeather){
@@ -120,5 +119,26 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+    }
+    private fun doBaseElementVisible(){
+        with(binding){
+            tvCity.visibility = View.VISIBLE
+            tvDescription.visibility = View.VISIBLE
+            tvTemp.visibility = View.VISIBLE
+            tvHeader.visibility = View.VISIBLE
+            rvWeekWeather.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+
+        }
+    }
+    private fun doBaseElementGone(){
+        with(binding){
+            tvCity.visibility = View.GONE
+            tvDescription.visibility = View.GONE
+            tvTemp.visibility = View.GONE
+            tvHeader.visibility = View.GONE
+            rvWeekWeather.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+        }
     }
 }

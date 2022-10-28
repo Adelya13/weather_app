@@ -16,7 +16,7 @@ private val binding: ItemWeekWeatherBinding
     fun bind(item: DailyWeather ) {
         with(binding) {
             val tempImgService: TempImgService = TempImgService((item.minTemp+item.maxTemp)/2)
-            tvTempInterval.text = item.minTemp.toString() +" : "+ item.maxTemp.toString()
+            tvTempInterval.text = item.minTemp.toString() +"° : "+ item.maxTemp.toString() +"°"
             tvWeekday.text = item.weekday
             ivWeather.setImageResource(tempImgService.changeTemImg())
         }

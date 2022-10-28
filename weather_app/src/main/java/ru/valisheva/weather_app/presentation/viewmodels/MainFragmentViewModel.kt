@@ -58,9 +58,6 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
     }
-
-
-
     fun searchHourlyByCoordinates(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
@@ -92,6 +89,4 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
     }
-
-
 }
