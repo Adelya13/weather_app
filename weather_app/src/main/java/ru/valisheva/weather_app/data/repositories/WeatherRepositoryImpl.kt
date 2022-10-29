@@ -17,17 +17,25 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
 
     override suspend fun getHourlyWeatherByCoordinates(
-        latitude: Double,
-        longitude: Double
+        cityCoordinates: CityCoordinates
     ): CurrWeather {
-        return weatherMapper.mapHourlyWeather(meteoApi.getHourlyWeatherByCoordinates(latitude,longitude))
+        return weatherMapper.mapHourlyWeather(
+            meteoApi.getHourlyWeatherByCoordinates(
+                cityCoordinates.latitude,
+                cityCoordinates.longitude
+            )
+        )
     }
 
     override suspend fun getDailyWeatherByCoordinates(
-        latitude: Double,
-        longitude: Double
+        cityCoordinates: CityCoordinates
     ): ArrayList<DailyWeather> {
-        return weatherMapper.mapDailyWeather(meteoApi.getDailyWeatherByCoordinates(latitude,longitude))
+        return weatherMapper.mapDailyWeather(
+            meteoApi.getDailyWeatherByCoordinates(
+                cityCoordinates.latitude,
+                cityCoordinates.longitude
+            )
+        )
     }
 
     override suspend fun getCityCoordinates(
@@ -37,10 +45,14 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCurrentWeatherResponse(
-        latitude: Double,
-        longitude: Double
+        cityCoordinates: CityCoordinates
     ): CurrentWeather {
-        return weatherMapper.mapCurrentWeather(openWeatherApi.getWeather(latitude,longitude))
+        return weatherMapper.mapCurrentWeather(
+            openWeatherApi.getWeather(
+                cityCoordinates.latitude,
+                cityCoordinates.longitude
+            )
+        )
     }
 
 }

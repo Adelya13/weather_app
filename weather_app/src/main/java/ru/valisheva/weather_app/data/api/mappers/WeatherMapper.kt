@@ -43,7 +43,7 @@ class WeatherMapper {
         var i = 0;
         while (i< time.size) {
             result.add(DailyWeather(
-                if(i == 0) "Today" else normalizeWeekday(time[i]),
+                if(i == 0) "Сегодня" else normalizeWeekday(time[i]),
                 minTemp[i].toInt(), maxTemp[i].toInt()))
             i++
         }
@@ -57,13 +57,13 @@ class WeatherMapper {
     }
 
     private fun convertToDayOfWeek(day: Int): String{
-        if (day == 0) return "Sunday"
-        if (day == 1) return "Monday"
-        if (day == 2) return "Tuesday"
-        if (day == 3) return "Wednesday"
-        if (day == 4) return "Thursday"
-        if (day == 5) return "Friday"
-        if (day == 6) return "Saturday"
+        if (day == 0) return "Воскресенье"
+        if (day == 1) return "Понедельник"
+        if (day == 2) return "Вторник"
+        if (day == 3) return "Среда"
+        if (day == 4) return "Четверг"
+        if (day == 5) return "Пятница"
+        if (day == 6) return "Суббота"
         return ""
     }
 }

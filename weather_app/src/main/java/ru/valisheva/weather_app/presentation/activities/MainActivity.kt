@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import dagger.hilt.android.AndroidEntryPoint
+import ru.valisheva.weather_app.R
 import ru.valisheva.weather_app.databinding.ActivityMainBinding
 import ru.valisheva.weather_app.presentation.ViewPagerAdapter
 import ru.valisheva.weather_app.presentation.fragments.MainFragment
@@ -21,8 +22,8 @@ class MainActivity : AppCompatActivity() {
             setContentView(it.root)
         }
         val adapter= ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MainFragment(),"Main")
-        adapter.addFragment(SearchFragment(),"Search")
+        adapter.addFragment(MainFragment(), applicationContext.getString(R.string.general))
+        adapter.addFragment(SearchFragment(),applicationContext.getString(R.string.search))
         binding.viewPager.adapter=adapter
         binding.tbLayout.setupWithViewPager(binding.viewPager)
     }

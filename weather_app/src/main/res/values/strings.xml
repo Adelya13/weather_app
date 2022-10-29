@@ -1,13 +1,15 @@
 <resources>
-    <string name="app_name">Weather</string>
-    <string name="search">Search</string>
-    <string name="general">General</string>
-    <string name="city">Kazan</string>
-    <string name="degrees">2°</string>
-    <string name="description">Showers</string>
-    <string name="time">Now</string>
-    <string name="temp_interval">-1 : 4</string>
-    <string name="weekday">Today</string>
-    <string name="_7_day_forecast">7-DAY FORECAST</string>
-    <string name="message">Please enter the city</string>
+    <string name="app_name">Погода</string>
+    <string name="search">Поиск</string>
+    <string name="general">Главная</string>
+    <string name="city">--</string>
+    <string name="degrees">-°</string>
+    <string name="description">---</string>
+    <string name="time">Сейчас</string>
+    <string name="temp_interval">-° : -°</string>
+    <string name="weekday">Сегодня</string>
+    <string name="_7_day_forecast">НЕДЕЛЬНЫЙ ПРОГНОЗ</string>
+    <string name="message">Пожалуйста введите название города</string>
+    <string name="not_found_message">"Город не найден"</string>
+    <string name="permissions_not_given_message">Пожалуйста, дайте согласие на определение геопозиции</string>
 </resources>

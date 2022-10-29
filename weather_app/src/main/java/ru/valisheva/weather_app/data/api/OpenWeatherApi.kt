@@ -13,7 +13,7 @@ interface OpenWeatherApi {
         @Query("q") city: String
     ): WeatherShortResponse
 
-    @GET("weather")
+    @GET("weather?lang=ru")
     suspend fun getWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,

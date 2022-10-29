@@ -4,6 +4,7 @@ import ru.valisheva.weather_app.domain.models.CityCoordinates
 
 
 interface LocationRepository {
-    fun getLocation(): CityCoordinates
+    suspend fun getLocation(): CityCoordinates
     fun getDefaultLocation(): CityCoordinates
+    fun getCityByCoordinates(coordinates : CityCoordinates) : String
 }

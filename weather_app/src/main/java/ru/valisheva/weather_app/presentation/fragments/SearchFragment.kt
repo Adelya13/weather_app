@@ -1,7 +1,6 @@
 package ru.valisheva.weather_app.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.valisheva.weather_app.R
 import ru.valisheva.weather_app.databinding.FragmentSearchBinding
+import ru.valisheva.weather_app.domain.models.CityCoordinates
 import ru.valisheva.weather_app.domain.models.CurrWeather
 import ru.valisheva.weather_app.domain.models.CurrentWeather
 import ru.valisheva.weather_app.domain.models.DailyWeather
@@ -24,6 +24,7 @@ import ru.valisheva.weather_app.presentation.viewmodels.SearchFragmentViewModel
 class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var dailyAdapter: DailyAdapter
+    private lateinit var cityCoordinates: CityCoordinates
     private val viewModel: SearchFragmentViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,6 +46,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 doBaseElementVisible()
             },onFailure = {
                 Log.e("DAILY_EXCEPTION", it.message.toString())
+
             })
         }
         viewModel.currWeather.observe(viewLifecycleOwner){
@@ -56,20 +58,21 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
         viewModel.currentWeather.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
-                showLocalInfo(it)
+                showDescription(it)
             },onFailure = {
                 Log.e("CURRENT_WEATHER_EXCEPTION", it.message.toString())
             })
         }
         viewModel.coordinates.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
-                viewModel.searchCurrentWeather(it.latitude,it.longitude)
-                viewModel.searchDailyByCoordinates(it.latitude,it.longitude)
-                viewModel.searchHourlyByCoordinates(it.latitude,it.longitude)
+                cityCoordinates = CityCoordinates(it.latitude, it.longitude)
+                viewModel.searchCurrentWeather(cityCoordinates)
+                viewModel.searchDailyByCoordinates(cityCoordinates)
+                viewModel.searchHourlyByCoordinates(cityCoordinates)
             },onFailure = {
-                binding.tvMessage.text = "City not found!"
-                stopProgress()
+                binding.tvMessage.text = context?.getString(R.string.not_found_message)
                 doBaseElementGone()
+                stopProgress()
                 Log.e("COORDINATES_EXCEPTION", it.message.toString())
             })
         }
@@ -82,6 +85,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
     private fun initSV(){
         with(binding){
+
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
                 @SuppressLint("SetTextI18n")
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -90,7 +94,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                         doProgress()
                         viewModel.getCoordinatesByCityName(query)
                     }else{
-                        tvMessage.text = "Please enter the city name"
+                        tvMessage.text = context?.getString(R.string.message)
                         doBaseElementGone()
                     }
                     return false
@@ -110,17 +114,23 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showLocalTemp(hourlyWeather: CurrWeather){
         with(binding){
-            tvTemp.text = hourlyWeather.currTemp.toString()
+            tvTemp.text = hourlyWeather.currTemp.toString() +  "°"
         }
     }
-    @SuppressLint("SetTextI18n")
-    private fun showLocalInfo(currentWeather: CurrentWeather){
-        with(binding){
-            tvCity.text = currentWeather.city + "°"
-            tvDescription.text = currentWeather.descriptions
-        }
+    private fun showDescription(currentWeather: CurrentWeather){
+        binding.tvDescription.text = currentWeather.descriptions
+        binding.tvCity.text = currentWeather.city
+    }
+
+    private fun doProgress(){
+        binding.progressBar.visibility = View.VISIBLE
+        binding.tvMessage.visibility = View.GONE
+    }
+    private fun stopProgress(){
+        binding.progressBar.visibility = View.GONE
     }
     private fun doBaseElementVisible(){
         with(binding){
@@ -131,13 +141,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             rvWeekWeather.visibility = View.VISIBLE
             tvMessage.visibility = View.GONE
         }
-    }
-    private fun doProgress(){
-        binding.progressBar.visibility = View.VISIBLE
-        binding.tvMessage.visibility = View.GONE
-    }
-    private fun stopProgress(){
-        binding.progressBar.visibility = View.GONE
     }
     private fun doBaseElementGone(){
         with(binding){

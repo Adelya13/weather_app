@@ -14,6 +14,7 @@ import ru.valisheva.weather_app.domain.usecases.GetCityCoordinates
 import ru.valisheva.weather_app.domain.usecases.GetCurrentWeatherResponse
 import ru.valisheva.weather_app.domain.usecases.GetHourlyWeatherByCoordinates
 import ru.valisheva.weather_app.domain.usecases.GetDailyWeatherByCoordinates
+import ru.valisheva.weather_app.domain.usecases.location.GetCityNameByCoordinates
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +23,7 @@ class SearchFragmentViewModel @Inject constructor(
     private val getDailyWeatherByCoordinates: GetDailyWeatherByCoordinates,
     private val getCityCoordinates: GetCityCoordinates,
     private val getCurrentWeatherResponse: GetCurrentWeatherResponse,
+    private val getCityNameByCoordinates: GetCityNameByCoordinates,
 ) : ViewModel(){
 
     private var _currWeather: MutableLiveData<Result<CurrWeather>> = MutableLiveData()
@@ -37,6 +39,7 @@ class SearchFragmentViewModel @Inject constructor(
     val coordinates: LiveData<Result<CityCoordinates>> = _coordinates
 
 
+
     fun getCoordinatesByCityName(name: String){
         viewModelScope.launch {
             try {
@@ -47,20 +50,20 @@ class SearchFragmentViewModel @Inject constructor(
             }
         }
     }
-    fun searchHourlyByCoordinates(latitude: Double, longitude: Double) {
+    fun searchHourlyByCoordinates(coordinates: CityCoordinates) {
         viewModelScope.launch {
             try {
-                val currentWeather = getHourlyWeatherByCoordinates(latitude,longitude)
-                _currWeather.value = Result.success(currentWeather)
+                val hourly = getHourlyWeatherByCoordinates(coordinates)
+                _currWeather.value = Result.success(hourly)
             }catch (ex: Exception) {
                 _currWeather.value = Result.failure(ex)
             }
         }
     }
-    fun searchDailyByCoordinates(latitude: Double, longitude: Double) {
+    fun searchDailyByCoordinates(coordinates: CityCoordinates) {
         viewModelScope.launch {
             try {
-                val daily = getDailyWeatherByCoordinates(latitude, longitude)
+                val daily = getDailyWeatherByCoordinates(coordinates)
                 _daily.value = Result.success(daily)
             } catch (ex: Exception) {
                 _daily.value = Result.failure(ex)
@@ -68,10 +71,10 @@ class SearchFragmentViewModel @Inject constructor(
         }
     }
 
-    fun searchCurrentWeather(latitude: Double, longitude: Double){
+    fun searchCurrentWeather(coordinates: CityCoordinates){
         viewModelScope.launch {
             try {
-                val currentWeather = getCurrentWeatherResponse(latitude, longitude)
+                val currentWeather = getCurrentWeatherResponse(coordinates)
                 _currentWeather.value = Result.success(currentWeather)
             } catch (ex: Exception) {
                 _currentWeather.value = Result.failure(ex)
