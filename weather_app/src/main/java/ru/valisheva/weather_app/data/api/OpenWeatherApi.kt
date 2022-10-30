@@ -8,7 +8,7 @@ import ru.valisheva.weather_app.data.responses.WeatherShortResponse
 
 interface OpenWeatherApi {
 
-    @GET("weather")
+    @GET("weather?lang=ru")
     suspend fun getCoordinates(
         @Query("q") city: String
     ): WeatherShortResponse
