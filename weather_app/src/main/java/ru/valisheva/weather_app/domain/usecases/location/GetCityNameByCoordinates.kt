@@ -11,9 +11,7 @@ class GetCityNameByCoordinates  @Inject constructor(
     private val locationRepository: LocationRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ){
-    suspend operator fun invoke(coordinates : CityCoordinates): String {
-        return withContext(dispatcher){
-            locationRepository.getCityByCoordinates(coordinates)
-        }
+     operator fun invoke(coordinates : CityCoordinates): String {
+        return locationRepository.getCityByCoordinates(coordinates)
     }
 }

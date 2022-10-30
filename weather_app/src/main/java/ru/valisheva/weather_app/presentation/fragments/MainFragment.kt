@@ -66,12 +66,12 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
         viewModel.coordinates.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
                 cityCoordinates = CityCoordinates(it.latitude, it.longitude)
-                viewModel.getCityName(cityCoordinates)
+//                viewModel.getCityName(cityCoordinates)
                 viewModel.searchCurrentWeather(cityCoordinates)
                 viewModel.searchDailyByCoordinates(cityCoordinates)
                 viewModel.searchHourlyByCoordinates(cityCoordinates)
             },onFailure = {
-                doBaseElementVisible()
+                showMessage()
                 Log.e("COORDINATES_EXCEPTION", it.message.toString())
             })
         }
@@ -109,24 +109,31 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
     private fun showLocalInfo(currentWeather: CurrentWeather){
         with(binding){
             tvDescription.text = currentWeather.descriptions
+            tvCity.text = currentWeather.city
         }
     }
     private fun checkPermission(){
         if (checkSelfPermission(
                 requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED){
             viewModel.getLocation()
         }else{
             permissionLauncher.launch(
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
             )
         }
     }
     @SuppressLint("MissingPermission")
     private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission->
-            if (permission == true) {
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (
+                it[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                it[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
                 viewModel.getLocation()
             }else{
                 showMessage()

@@ -1,11 +1,8 @@
 package ru.valisheva.weather_app.data.repositories
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Geocoder
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.valisheva.weather_app.domain.models.CityCoordinates
@@ -22,7 +19,7 @@ class LocationRepositoryImpl @Inject constructor(
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     private lateinit var coordinates : CityCoordinates
-    private val geo : Geocoder = Geocoder(context)
+    private val geo : Geocoder = Geocoder(context, Locale.ENGLISH)
 
     @SuppressLint("MissingPermission")
     override suspend fun getLocation(): CityCoordinates = suspendCoroutine{
@@ -35,18 +32,20 @@ class LocationRepositoryImpl @Inject constructor(
                     )
                     it.resume(coordinates)
                 }else{
-                    it.resumeWithException(Exception("Permission for location not given"))
+                    it.resumeWithException(Exception(" Location not found"))
                 }
             }
     }
 
-    override suspend fun getCityByCoordinates(coordinates : CityCoordinates): String = suspendCoroutine{
+//  this method dont used
+    override fun getCityByCoordinates(coordinates : CityCoordinates): String{
         val fullName = geo.getFromLocation(
             coordinates.latitude,
             coordinates.longitude,
             1
         )[0].subAdminArea
-        val regex = """\s([\S]*)${'$'}""".toRegex()
-        it.resume(regex.find(fullName)?.value.toString())
+        val regex = """\s([\S]*)""".toRegex()
+
+        return(regex.find(fullName)?.value.toString())
     }
 }
