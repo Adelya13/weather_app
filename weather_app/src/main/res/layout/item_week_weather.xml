@@ -48,9 +48,4 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_weather"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

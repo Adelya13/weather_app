@@ -23,7 +23,6 @@ class SearchFragmentViewModel @Inject constructor(
     private val getDailyWeatherByCoordinates: GetDailyWeatherByCoordinates,
     private val getCityCoordinates: GetCityCoordinates,
     private val getCurrentWeatherResponse: GetCurrentWeatherResponse,
-    private val getCityNameByCoordinates: GetCityNameByCoordinates,
 ) : ViewModel(){
 
     private var _currWeather: MutableLiveData<Result<CurrWeather>> = MutableLiveData()

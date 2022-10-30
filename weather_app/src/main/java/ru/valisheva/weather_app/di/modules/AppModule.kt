@@ -21,8 +21,4 @@ class AppModule {
 
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-
-//    @Provides
-//    fun bindContext(application: App): Context = application.applicationContext
-
 }

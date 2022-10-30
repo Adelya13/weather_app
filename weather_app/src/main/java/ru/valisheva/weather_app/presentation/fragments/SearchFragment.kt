@@ -53,14 +53,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             it?.fold(onSuccess = { it ->
                 showLocalTemp(it)
             },onFailure = {
-                Log.e("CURRENT_WEATHER_EXCEPTION", it.message.toString())
+                Log.e("CURRENT_WEATHER_FROM_METEO_API_EXCEPTION", it.message.toString())
             })
         }
         viewModel.currentWeather.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
                 showDescription(it)
             },onFailure = {
-                Log.e("CURRENT_WEATHER_EXCEPTION", it.message.toString())
+                Log.e("CURRENT_WEATHER_EXCEPTION_FROM_OPEN_API", it.message.toString())
             })
         }
         viewModel.coordinates.observe(viewLifecycleOwner){

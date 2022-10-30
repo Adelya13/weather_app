@@ -54,5 +54,4 @@ class WeatherRepositoryImpl @Inject constructor(
             )
         )
     }
-
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.valisheva.weather_app.databinding.ItemWeekWeatherBinding
 import ru.valisheva.weather_app.domain.models.DailyWeather
-import ru.valisheva.weather_app.presentation.services.TempImgService
+import ru.valisheva.weather_app.presentation.utils.TempImgService
 
 class DailyHolder(
 private val binding: ItemWeekWeatherBinding

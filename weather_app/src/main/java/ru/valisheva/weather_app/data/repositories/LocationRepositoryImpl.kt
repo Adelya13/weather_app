@@ -16,15 +16,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-private const val DEFAULT_LATITUDE = 55.001
-private const val DEFAULT_LONGITUDE = 49.001
-
 class LocationRepositoryImpl @Inject constructor(
     @ApplicationContext context: Context
 ) : LocationRepository {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    private var coordinates : CityCoordinates = CityCoordinates(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
+    private lateinit var coordinates : CityCoordinates
     private val geo : Geocoder = Geocoder(context)
 
     @SuppressLint("MissingPermission")
@@ -43,17 +40,13 @@ class LocationRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getCityByCoordinates(coordinates : CityCoordinates): String {
+    override suspend fun getCityByCoordinates(coordinates : CityCoordinates): String = suspendCoroutine{
         val fullName = geo.getFromLocation(
             coordinates.latitude,
             coordinates.longitude,
             1
         )[0].subAdminArea
         val regex = """\s([\S]*)${'$'}""".toRegex()
-        return regex.find(fullName)?.value.toString()
-    }
-
-    override fun getDefaultLocation(): CityCoordinates {
-        return coordinates
+        it.resume(regex.find(fullName)?.value.toString())
     }
 }

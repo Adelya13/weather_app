@@ -9,6 +9,7 @@
         <item name="colorSecondary">@color/dark</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
+        <!-- Text Style. -->
         <item name="fontFamily">@font/amethysta</item>
         <item name="android:textColorPrimary">@color/dark</item>
         <!-- Status bar color. -->

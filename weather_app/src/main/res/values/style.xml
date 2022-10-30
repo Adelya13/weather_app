@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="BasicTextStyle">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/amethysta</item>
         <item name="android:textColor">@color/dark</item>
-
-
     </style>
+
     <style name="SmallTextStyle" parent="BasicTextStyle">
         <item name="android:textSize">12sp</item>
     </style>
@@ -14,6 +13,4 @@
     <style name="LargeTextStyle" parent="BasicTextStyle">
         <item name="android:textSize">48sp</item>
     </style>
-
-
 </resources>

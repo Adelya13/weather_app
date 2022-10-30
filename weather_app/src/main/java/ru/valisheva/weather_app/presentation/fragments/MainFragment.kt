@@ -3,7 +3,6 @@ package ru.valisheva.weather_app.presentation.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,7 +22,6 @@ import ru.valisheva.weather_app.domain.models.CurrWeather
 import ru.valisheva.weather_app.presentation.decorators.SpaceItemDecorator
 import ru.valisheva.weather_app.presentation.rv.daily.DailyAdapter
 import ru.valisheva.weather_app.presentation.viewmodels.MainFragmentViewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
@@ -39,17 +37,7 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
         initObservers()
         initDailyRV()
         doBaseElementGone()
-        if (checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED){
-            viewModel.getLocation()
-        }else{
-            permissionLauncher.launch(
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
-            )
-        }
-
+        checkPermission()
     }
 
     private fun initObservers(){
@@ -62,17 +50,17 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
             })
         }
         viewModel.currWeather.observe(viewLifecycleOwner){
-            it?.fold(onSuccess = { it ->
-                showLocalTemp(it)
+            it?.fold(onSuccess = { currWeather ->
+                showLocalTemp(currWeather)
             },onFailure = {
-                Log.e("CURRENT_WEATHER_EXCEPTION", it.message.toString())
+                Log.e("CURRENT_WEATHER_FROM_METEO_API_EXCEPTION", it.message.toString())
             })
         }
         viewModel.currentWeather.observe(viewLifecycleOwner){
-            it?.fold(onSuccess = { it ->
-                showLocalInfo(it)
+            it?.fold(onSuccess = { currentWeather ->
+                showLocalInfo(currentWeather)
             },onFailure = {
-                Log.e("CURRENT_WEATHER_EXCEPTION", it.message.toString())
+                Log.e("CURRENT_WEATHER_FROM_OPEN_API_EXCEPTION", it.message.toString())
             })
         }
         viewModel.coordinates.observe(viewLifecycleOwner){
@@ -123,34 +111,28 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
             tvDescription.text = currentWeather.descriptions
         }
     }
-
+    private fun checkPermission(){
+        if (checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED){
+            viewModel.getLocation()
+        }else{
+            permissionLauncher.launch(
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        }
+    }
     @SuppressLint("MissingPermission")
     private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { it->
-            if (
-//                it[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                it[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-            ) {
-                println("PERMISSIONS")
-//                println(it[Manifest.permission.ACCESS_FINE_LOCATION])
-                println(it[Manifest.permission.ACCESS_COARSE_LOCATION])
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission->
+            if (permission == true) {
                 viewModel.getLocation()
             }else{
                 showMessage()
             }
         }
 
-    private fun getLocation() {
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-//            arrayOf(
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            )
-        )
-    }
     private fun showMessage(){
         binding.tvMessage.text = requireContext().getString(R.string.permissions_not_given_message)
         binding.tvMessage.visibility = View.VISIBLE

@@ -15,7 +15,6 @@ import ru.valisheva.weather_app.domain.usecases.GetHourlyWeatherByCoordinates
 import ru.valisheva.weather_app.domain.usecases.GetDailyWeatherByCoordinates
 import ru.valisheva.weather_app.domain.usecases.location.GetCityNameByCoordinates
 import ru.valisheva.weather_app.domain.usecases.location.GetCurrentCoordinates
-import ru.valisheva.weather_app.domain.usecases.location.GetDefaultCoordinates
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +23,6 @@ class MainFragmentViewModel @Inject constructor(
     private val getDailyWeatherByCoordinates: GetDailyWeatherByCoordinates,
     private val getCurrentWeatherResponse: GetCurrentWeatherResponse,
     private val getCurrentCoordinates: GetCurrentCoordinates,
-    private val getDefaultCoordinates: GetDefaultCoordinates,
     private val getCityNameByCoordinates: GetCityNameByCoordinates,
 ) : ViewModel(){
 
@@ -63,16 +61,6 @@ class MainFragmentViewModel @Inject constructor(
                 _city.value = Result.success(city)
             }catch(ex: Exception){
                 _city.value = Result.failure(ex)
-            }
-        }
-    }
-    fun getDefaultLocation(){
-        viewModelScope.launch {
-            try{
-                val coordinates =  getDefaultCoordinates.invoke()
-                _coordinates.value = Result.success(coordinates)
-            }catch(ex: Exception){
-                _coordinates.value = Result.failure(ex)
             }
         }
     }

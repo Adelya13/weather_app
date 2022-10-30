@@ -1,14 +1,11 @@
 package ru.valisheva.weather_app.presentation.activities
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import dagger.hilt.android.AndroidEntryPoint
 import ru.valisheva.weather_app.R
 import ru.valisheva.weather_app.databinding.ActivityMainBinding
-import ru.valisheva.weather_app.presentation.ViewPagerAdapter
+import ru.valisheva.weather_app.presentation.utils.ViewPagerAdapter
 import ru.valisheva.weather_app.presentation.fragments.MainFragment
 import ru.valisheva.weather_app.presentation.fragments.SearchFragment
 

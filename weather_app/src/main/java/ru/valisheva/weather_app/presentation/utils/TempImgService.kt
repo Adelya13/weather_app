@@ -1,4 +1,4 @@
-package ru.valisheva.weather_app.presentation.services
+package ru.valisheva.weather_app.presentation.utils
 
 import ru.valisheva.weather_app.R
 

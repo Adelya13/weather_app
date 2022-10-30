@@ -1,4 +1,4 @@
-package ru.valisheva.weather_app.presentation
+package ru.valisheva.weather_app.presentation.utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -11,6 +11,7 @@ class ViewPagerAdapter(fm : FragmentManager) : FragmentStatePagerAdapter(fm){
     override fun getCount() = mFrgmentList.size
     override fun getItem(position: Int) = mFrgmentList[position]
     override fun getPageTitle(position: Int) = mFrgmentTitleList[position]
+
     fun addFragment(fragment:Fragment,title:String){
         mFrgmentList.add(fragment)
         mFrgmentTitleList.add(title)
