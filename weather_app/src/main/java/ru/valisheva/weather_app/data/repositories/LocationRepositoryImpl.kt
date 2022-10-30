@@ -19,7 +19,7 @@ class LocationRepositoryImpl @Inject constructor(
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     private lateinit var coordinates : CityCoordinates
-    private val geo : Geocoder = Geocoder(context, Locale.ENGLISH)
+    private val geo : Geocoder = Geocoder(context)
 
     @SuppressLint("MissingPermission")
     override suspend fun getLocation(): CityCoordinates = suspendCoroutine{
@@ -37,7 +37,6 @@ class LocationRepositoryImpl @Inject constructor(
             }
     }
 
-//  this method dont used
     override fun getCityByCoordinates(coordinates : CityCoordinates): String{
         val fullName = geo.getFromLocation(
             coordinates.latitude,

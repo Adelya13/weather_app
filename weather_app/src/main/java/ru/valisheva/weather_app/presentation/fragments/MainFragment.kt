@@ -66,7 +66,7 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
         viewModel.coordinates.observe(viewLifecycleOwner){
             it?.fold(onSuccess = { it ->
                 cityCoordinates = CityCoordinates(it.latitude, it.longitude)
-//                viewModel.getCityName(cityCoordinates)
+                viewModel.getCityName(cityCoordinates)
                 viewModel.searchCurrentWeather(cityCoordinates)
                 viewModel.searchDailyByCoordinates(cityCoordinates)
                 viewModel.searchHourlyByCoordinates(cityCoordinates)
@@ -109,7 +109,7 @@ class MainFragment: Fragment(R.layout.fragment_main)  {
     private fun showLocalInfo(currentWeather: CurrentWeather){
         with(binding){
             tvDescription.text = currentWeather.descriptions
-            tvCity.text = currentWeather.city
+//            tvCity.text = currentWeather.city
         }
     }
     private fun checkPermission(){
